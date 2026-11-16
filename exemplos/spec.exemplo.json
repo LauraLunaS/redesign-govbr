@@ -1,0 +1,100 @@
+{
+  "projeto": "Portal Exemplo",
+  "figma": {
+    "arquivo": "COLE_AQUI_A_CHAVE_DO_ARQUIVO",
+    "pagina": "Redesign DS GOV.BR"
+  },
+  "larguras": [1280, 1440, 1920],
+  "grid": {
+    "1280": { "margem": 40 },
+    "1440": { "margem": 120 },
+    "1920": { "margem": 160 }
+  },
+  "cabecalho": {
+    "assinatura": "Ministério Exemplo",
+    "sistema": "Portal Exemplo",
+    "busca": "O que você procura?",
+    "usuario": "Maria Silva",
+    "menu": ["Início", { "nome": "Solicitações", "submenu": true }, "Ajuda"]
+  },
+  "rodape": {
+    "colunas": [
+      { "titulo": "Portal", "links": ["Sobre", "Termos de uso", "Privacidade"] },
+      { "titulo": "Ajuda", "links": ["Perguntas frequentes", "Fale conosco"] }
+    ]
+  },
+  "telas": [
+    {
+      "id": "solicitacoes-lista",
+      "area": "Solicitações",
+      "ordem": 1,
+      "nome": "Lista de solicitações",
+      "rota": "/solicitacoes",
+      "perfil": "consumidor",
+      "menu": "Solicitações",
+      "status": "desenhada",
+      "breadcrumb": ["Início", "Solicitações"],
+      "titulo": "Solicitações",
+      "descricao": "Acompanhe as solicitações enviadas e o andamento de cada uma.",
+      "blocos": [
+        { "tipo": "mensagem", "nivel": "info", "texto": "Solicitações aprovadas ficam disponíveis por 30 dias." },
+        {
+          "tipo": "filtros",
+          "busca": "Buscar por número ou assunto",
+          "grupos": [
+            { "rotulo": "status", "opcoes": ["Todas", "Em análise", "Aprovada", "Recusada"], "marcada": "Todas" }
+          ],
+          "aberto": false
+        },
+        {
+          "tipo": "tabela",
+          "titulo": "Minhas solicitações",
+          "colunas": [
+            { "t": "Número", "peso": 1 },
+            { "t": "Assunto", "peso": 2.4 },
+            { "t": "Enviada em", "peso": 1.2 },
+            { "t": "Status", "peso": 1.2 },
+            { "t": "Ações", "peso": 1, "ordenar": false }
+          ],
+          "linhas": [
+            ["SOL-0012", "Acesso ao conjunto de dados de frota", "12/11/2026", { "tag": "Em análise", "tipo": "aviso" }, { "link": "Ver detalhe" }],
+            ["SOL-0011", "Atualização de cadastro", "05/11/2026", { "tag": "Aprovada", "tipo": "ok" }, { "link": "Ver detalhe" }]
+          ],
+          "paginacao": { "exibir": 10, "intervalo": "1–2 de 2 itens", "pagina": 1 }
+        }
+      ],
+      "regras": [
+        { "alvo": "Ver detalhe", "nota": "**Ver detalhe** abre a solicitação com o histórico de andamento." },
+        { "alvo": "Em análise", "nota": "**Status:** Em análise, Aprovada ou Recusada." }
+      ]
+    },
+    {
+      "id": "solicitacoes-nova",
+      "area": "Solicitações",
+      "ordem": 2,
+      "nome": "Nova solicitação",
+      "rota": "/solicitacoes/nova",
+      "perfil": "consumidor",
+      "menu": "Solicitações",
+      "status": "desenhada",
+      "breadcrumb": ["Início", "Solicitações", "Nova solicitação"],
+      "titulo": "Nova solicitação",
+      "blocos": [
+        { "tipo": "passos", "itens": ["Dados", "Justificativa", "Revisão"], "ativo": 0 },
+        {
+          "tipo": "formulario",
+          "colunas": 2,
+          "campos": [
+            { "rotulo": "Assunto", "tipo": "texto", "obrigatorio": true, "placeholder": "Descreva em poucas palavras" },
+            { "rotulo": "Categoria", "tipo": "select", "obrigatorio": true, "placeholder": "Selecione" },
+            { "rotulo": "Detalhes", "tipo": "textarea", "placeholder": "Explique o que você precisa", "ajuda": "Limite de 500 caracteres" }
+          ],
+          "acoes": { "secundaria": "Cancelar", "primaria": "Continuar" }
+        }
+      ],
+      "regras": [
+        { "alvo": "Continuar", "nota": "**Continuar** valida os campos obrigatórios e avança para Justificativa." }
+      ]
+    }
+  ]
+}

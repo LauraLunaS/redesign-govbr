@@ -1,0 +1,13 @@
+{
+  "name": "redesign-govbr",
+  "owner": { "name": "LauraLunaS" },
+  "metadata": { "description": "Plugins de redesign no Design System GOV.BR para o Claude Code." },
+  "plugins": [
+    {
+      "name": "redesign-govbr",
+      "source": "./",
+      "description": "Mapeia as telas de um projeto web, redesenha no DS GOV.BR no Figma e gera o handoff após validação humana.",
+      "version": "0.1.0"
+    }
+  ]
+}

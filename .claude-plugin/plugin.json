@@ -1,0 +1,7 @@
+{
+  "name": "redesign-govbr",
+  "version": "0.1.0",
+  "description": "Agente que sobe um projeto web, mapeia todas as telas, redesenha cada uma no Design System GOV.BR direto no Figma e, depois da validação humana, gera o handoff para desenvolvimento.",
+  "author": { "name": "LauraLunaS" },
+  "keywords": ["figma", "design-system", "gov.br", "redesign", "handoff", "acessibilidade"]
+}

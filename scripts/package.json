@@ -1,0 +1,11 @@
+{
+  "name": "redesign-govbr-scripts",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Scripts do plugin redesign-govbr (captura com Playwright, leitura do Figma pela API REST, geração de plugins do Figma).",
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "playwright": "1.48.2"
+  }
+}
