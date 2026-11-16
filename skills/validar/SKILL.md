@@ -24,7 +24,8 @@ Antes de mostrar à pessoa, verifique:
 - texto cortado ou sobreposto;
 - tabela estourando o cartão;
 - painel cobrindo conteúdo importante;
-- conteúdo diferente da captura original (texto inventado ou faltando).
+- conteúdo diferente da captura original (texto inventado ou faltando);
+- **consistência com o contexto:** compare lado a lado com a tela de referência do mesmo tipo (`contexto/figma/`) e com as regras do `contexto/resumo.md`. Confira largura de conteúdo, tabela, filtros, títulos e espaçamentos.
 
 Corrija o que for problema seu antes da validação humana.
 

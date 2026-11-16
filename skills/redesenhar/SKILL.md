@@ -5,12 +5,16 @@ description: Redesenha as telas mapeadas no Design System GOV.BR direto no Figma
 
 # Redesenhar no DS GOV.BR
 
-Antes de começar, carregue a skill `ds-govbr` (padrões e componentes). O formato completo do spec está em [spec.md](spec.md).
+O formato completo do spec está em [spec.md](spec.md).
+
+Antes de começar, carregue:
+- a skill `ds-govbr`, com a referência rápida do DS;
+- **`.redesign-govbr/contexto/resumo.md`**, com os padrões das telas já validadas do projeto, a biblioteca, as regras do site do DS e as referências gov.br. Se ele não existir, rode antes a skill `coletar-contexto`.
 
 ## 1. Escrever o spec, uma área por vez
 
 Para cada área do `rotas.json`, na ordem do menu:
-1. Leia `capturas/<id>.json` e veja `capturas/<id>-1440.png` com Read.
+1. Leia `capturas/<id>.json` e veja `capturas/<id>-1440.png` com Read. Procure no `resumo.md` uma tela de referência do mesmo tipo (lista, formulário, detalhe) e abra o PNG dela em `contexto/figma/` ou `contexto/govbr/`. A tela nova deve seguir o mesmo padrão de composição.
 2. Leia o componente da página no código. Ali estão os textos exatos, as validações, os estados (vazio, erro, carregando), as permissões e as regras.
 3. Escreva as telas em `.redesign-govbr/spec.json`, campo `telas`, com `status: "desenhada"`:
    - **conteúdo idêntico ao sistema:** títulos, rótulos, colunas, opções, botões e mensagens;
@@ -18,7 +22,10 @@ Para cada área do `rotas.json`, na ordem do menu:
    - **`regras`:** o comportamento e as regras de negócio tirados do código, uma nota por elemento (`alvo` = texto que aparece na tela). Elas viram as anotações do handoff.
 
    Com muitas áreas, delegue cada uma ao subagente `redator-de-spec`. Revise o que voltar contra a regra "só conteúdo que existe".
-4. Preencha os dados do topo do spec uma vez, a partir do sistema real: `projeto`, `figma`, `larguras`, `cabecalho` (assinatura, nome do sistema, itens do menu, usuário de exemplo) e `rodape`.
+4. Preencha os dados do topo do spec uma vez:
+   - **Do sistema real:** `projeto`, `figma`, `larguras`, `cabecalho` (assinatura, nome do sistema, itens do menu, usuário de exemplo) e `rodape`.
+   - **`grid`:** use as margens reais das telas de referência do projeto, de `padroes-figma.json`.
+   - **`biblioteca`:** o mapa de componentes e variantes definido em `coletar-contexto`. Assim header, footer e botões saem como instâncias da biblioteca DS GOV.BR.
 
 ## 2. Gerar o plugin
 

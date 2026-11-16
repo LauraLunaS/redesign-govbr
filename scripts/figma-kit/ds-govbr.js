@@ -83,6 +83,8 @@ function tag(pai, s, k) {
 }
 function botao(pai, s, tipo, o) {
   o = o || {};
+  // instância da biblioteca DS GOV.BR, quando mapeada no spec (papel botao-primario/secundario/terciario)
+  if (typeof instanciaDe === 'function') { const i = instanciaDe(pai, 'botao-' + (tipo || 'secundario'), s, { pequeno: o.peq }); if (i) return i; }
   const pri = tipo === 'primario', ter = tipo === 'terciario';
   const f = box(pai, 'HORIZONTAL', {
     name: 'Botão ' + (pri ? 'primário' : ter ? 'terciário' : 'secundário') + ' · ' + s,

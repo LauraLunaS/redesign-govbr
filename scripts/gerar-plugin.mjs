@@ -52,7 +52,7 @@ if (modo === 'handoff') telas = telas.filter((t) => t.status === 'aprovada');
 if (!telas.length) falhar(modo === 'handoff' ? 'nenhuma tela com status "aprovada" no recorte' : 'nenhuma tela no recorte');
 const larguras = A.larguras ? String(A.larguras).split(',').map(Number) : spec.larguras;
 
-const specPlugin = { projeto: spec.projeto, figma: spec.figma, grid: spec.grid, cabecalho: spec.cabecalho, rodape: spec.rodape };
+const specPlugin = { projeto: spec.projeto, figma: spec.figma, grid: spec.grid, cabecalho: spec.cabecalho, rodape: spec.rodape, biblioteca: spec.biblioteca };
 const dados = `const SPEC = ${JSON.stringify(specPlugin)};\nconst TELAS = ${JSON.stringify(telas)};\nconst LARGURAS = ${JSON.stringify(larguras)};\n`;
 
 const MAIN_TELAS = String.raw`
@@ -60,6 +60,8 @@ const MAIN_TELAS = String.raw`
 const fundoDe = (nos) => nos.length ? Math.max(...nos.map((n) => n.y + n.height)) : 0;
 async function main() {
   await prepararFontes();
+  const falhasBib = await importarBiblioteca();
+  const usadosBib = Object.keys(COMP);
   let pagina = figma.root.children.find((p) => p.name === SPEC.figma.pagina);
   if (!pagina) { pagina = figma.createPage(); pagina.name = SPEC.figma.pagina; }
   await figma.setCurrentPageAsync(pagina);
@@ -95,7 +97,7 @@ async function main() {
     if (nova) yNova = sec.y + sec.height + 400;
   }
   figma.viewport.scrollAndZoomIntoView(pagina.children.filter((n) => n.type === 'SECTION' && areas.some((a) => n.name.includes(' · ' + a + ' ('))));
-  return feitas.length + ' telas desenhadas na página "' + pagina.name + '".' + (erros.length ? ' Falharam: ' + erros.join(' | ') : '') + ' Telas antigas com o mesmo nome foram mantidas com o sufixo "· anterior".' + avisoIcones();
+  return feitas.length + ' telas desenhadas na página "' + pagina.name + '".' + (erros.length ? ' Falharam: ' + erros.join(' | ') : '') + ' Telas antigas com o mesmo nome foram mantidas com o sufixo "· anterior".' + avisoIcones() + (usadosBib.length ? ' Biblioteca DS: instâncias de ' + usadosBib.join(', ') + '.' : '') + (falhasBib.length ? ' Não consegui importar da biblioteca: ' + falhasBib.join(', ') + ' (verifique se a biblioteca está publicada e ativada neste arquivo em Assets → Libraries); usei o desenho do kit.' : '');
 }
 main().then((m) => figma.closePlugin(m)).catch((e) => figma.closePlugin('Erro: ' + (e && e.message ? e.message : e)));
 `;

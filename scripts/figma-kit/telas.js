@@ -52,6 +52,39 @@ function iconeStatus(pai, tipo, cor, tam, letra, corLetra) {
   return selo(pai, letra, cor, corLetra || G.branco, tam);
 }
 
+// ---------- biblioteca DS GOV.BR no Figma (instâncias reais quando mapeadas no spec) ----------
+// SPEC.biblioteca = { componentes: { "header": "<key>", "footer": "<key>", "botao-primario": { "key": "<key do conjunto>", "variante": "Tipo=Primário, Tamanho=Médio" }, ... },
+//                     textos: { "header": { "<nome da camada de texto>": "texto" } } }
+const COMP = {};
+async function importarBiblioteca() {
+  const mapa = (SPEC.biblioteca && SPEC.biblioteca.componentes) || {};
+  const falhas = [];
+  for (const [papel, ref] of Object.entries(mapa)) {
+    const key = typeof ref === 'string' ? ref : ref && ref.key;
+    const variante = ref && typeof ref === 'object' ? ref.variante : null;
+    if (!key) continue;
+    let comp = null;
+    try { comp = await figma.importComponentByKeyAsync(key); } catch (e) {
+      try { const set = await figma.importComponentSetByKeyAsync(key); comp = (variante && set.children.find((v) => v.name === variante)) || set.defaultVariant; } catch (e2) {}
+    }
+    if (comp) { COMP[papel] = comp; try { await carregarFontesDe(comp); } catch (e) {} } else falhas.push(papel);
+  }
+  return falhas;
+}
+function instanciaDe(pai, papel, texto, o) {
+  o = o || {};
+  const c = (o.pequeno && COMP[papel + '-pequeno']) || COMP[papel];
+  if (!c) return null;
+  const i = c.createInstance();
+  i.name = papel + (texto ? ' · ' + texto : '');
+  pai.appendChild(i);
+  if (texto != null) { const t = i.findOne((n) => n.type === 'TEXT'); if (t) tryset(() => { t.characters = String(texto); }); }
+  const textos = SPEC.biblioteca && SPEC.biblioteca.textos && SPEC.biblioteca.textos[papel];
+  if (textos) for (const [camada, valor] of Object.entries(textos)) { const t = i.findOne((n) => n.type === 'TEXT' && n.name === camada); if (t) tryset(() => { t.characters = String(valor); }); }
+  if (o.fill && ehAuto(pai)) tryset(() => { i.layoutSizingHorizontal = 'FILL'; });
+  return i;
+}
+
 // ---------- mensagens (info, aviso, erro, sucesso) ----------
 const MSG = {
   info: { bg: hex('#D4E5FF'), ic: hex('#1351B4'), l: 'i' }, aviso: { bg: hex('#FFF5C2'), ic: hex('#FFCD07'), l: '!', tx: true },
@@ -70,6 +103,7 @@ function mensagemGov(pai, b) {
 
 // ---------- header e footer GOV.BR ----------
 function cabecalhoGov(tela, margem) {
+  const ih = instanciaDe(tela, 'header', null, { fill: true }); if (ih) return ih;
   const c = SPEC.cabecalho || {};
   const h = box(tela, 'VERTICAL', { name: 'Header GOV.BR', bg: G.branco, sombra: true, w: 'FILL', pad: [12, margem, 12, margem], gap: 12 });
   const l1 = box(h, 'HORIZONTAL', { name: 'Linha 1', w: 'FILL', align: 'CENTER', gap: 16 });
@@ -102,6 +136,7 @@ function cabecalhoGov(tela, margem) {
   return h;
 }
 function rodapeGov(tela, margem) {
+  const ir = instanciaDe(tela, 'footer', null, { fill: true }); if (ir) return ir;
   const r = SPEC.rodape || {};
   const f = box(tela, 'VERTICAL', { name: 'Footer GOV.BR', bg: G.azulEsc, w: 'FILL', pad: [40, margem, 40, margem], gap: 32 });
   T(f, r.logo || 'gov.br', { font: F.b, size: 28, cor: G.branco, name: 'Logo' });

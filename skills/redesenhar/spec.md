@@ -17,9 +17,21 @@ Exemplo completo: `exemplos/spec.exemplo.json` na raiz do plugin.
     "menu": ["Início", { "nome": "Dados", "submenu": true }]  // menu principal, na ordem do sistema
   },
   "rodape": { "colunas": [{ "titulo": "…", "links": ["…"] }], "texto": "…" },
+  "biblioteca": {                        // opcional: instâncias da biblioteca DS GOV.BR publicada (ver coletar-contexto)
+    "componentes": {
+      "header": "<key do componente>",
+      "footer": "<key>",
+      "botao-primario":   { "key": "<key do conjunto>", "variante": "<nome exato da variante>" },
+      "botao-secundario": { "key": "<key do conjunto>", "variante": "…" },
+      "botao-primario-pequeno": { "key": "…", "variante": "…" }
+    },
+    "textos": { "header": { "<nome da camada de texto>": "Portal X" } }  // textos a trocar dentro das instâncias
+  },
   "telas": [ /* ver abaixo */ ]
 }
 ```
+
+Os papéis com instância da biblioteca são `header`, `footer`, `botao-primario`, `botao-secundario` e `botao-terciario`, com `-pequeno` opcional. Os demais componentes são desenhados pelo kit com as medidas do DS. Se a importação falhar porque a biblioteca não está publicada ou ativada, o plugin usa o kit e avisa na mensagem final.
 
 ## Tela
 

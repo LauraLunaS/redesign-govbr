@@ -24,7 +24,7 @@ const opt = {}; const pos = [];
 for (let i = 0; i < argv.length; i++) { if (argv[i].startsWith('--')) opt[argv[i].slice(2)] = argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[++i] : true; else pos.push(argv[i]); }
 const cmd = pos[0];
 const base = String(opt.base || '').replace(/\/$/, '');
-if (!cmd || !base) { console.error('uso: node capturar.mjs <login|descobrir|telas> --base http://localhost:PORTA [...]'); process.exit(1); }
+if (!cmd || (!base && cmd !== 'referencias')) { console.error('uso: node capturar.mjs <login|descobrir|telas> --base http://localhost:PORTA [...]  |  node capturar.mjs referencias --urls https://www.gov.br/...,https://... [--larguras 1440] [--saida .redesign-govbr/contexto/govbr]'); process.exit(1); }
 const estado = opt.estado || '.redesign-govbr/auth.json';
 const temEstado = fs.existsSync(estado);
 
@@ -118,6 +118,33 @@ try {
     fs.writeFileSync(path.join(saida, '_indice.json'), JSON.stringify(res, null, 2));
     const redirecionadas = res.filter((x) => x.urlFinal && rotas.find((r) => (r.id || '') === x.id && r.rota.split('?')[0] !== x.urlFinal));
     console.log(JSON.stringify({ ok: true, capturas: res.filter((x) => x.png).length, erros: res.filter((x) => x.erro), redirecionadas: redirecionadas.map((x) => x.id + ' → ' + x.urlFinal), saida }, null, 2));
+  } else if (cmd === 'referencias') {
+    // páginas reais do domínio gov.br como referência visual (só leitura, sem login, sem clicar em nada)
+    const urls = String(opt.urls || '').split(',').map((s) => s.trim()).filter(Boolean);
+    if (!urls.length) throw new Error('informe --urls com páginas do domínio gov.br');
+    const foraGov = urls.filter((u) => { try { const h = new URL(u).hostname; return !(h === 'gov.br' || h.endsWith('.gov.br')); } catch (e) { return true; } });
+    if (foraGov.length) throw new Error('só são aceitas páginas do domínio gov.br: ' + foraGov.join(', '));
+    const larguras = String(opt.larguras || '1440').split(',').map(Number);
+    const saida = opt.saida || '.redesign-govbr/contexto/govbr';
+    fs.mkdirSync(saida, { recursive: true });
+    const res = [];
+    for (const W of larguras) {
+      const ctx = await browser.newContext({ viewport: { width: W, height: 900 }, locale: 'pt-BR' });
+      const page = await ctx.newPage();
+      for (const u of urls) {
+        const id = new URL(u).hostname.replace(/^www\./, '').replace(/\./g, '-') + new URL(u).pathname.replace(/[^\w]+/g, '-').replace(/-+$/, '');
+        try {
+          await page.goto(u, { timeout: 45000 }); await esperar(page);
+          const png = path.join(saida, `${id}-${W}.png`);
+          await page.screenshot({ path: png, fullPage: true, timeout: 45000 });
+          if (W === larguras[0]) fs.writeFileSync(path.join(saida, `${id}.json`), JSON.stringify(Object.assign({ id, origem: u }, await resumir(page)), null, 2));
+          res.push({ id, url: u, largura: W, png });
+        } catch (e) { res.push({ id, url: u, largura: W, erro: String(e.message).slice(0, 160) }); }
+      }
+      await ctx.close();
+    }
+    fs.writeFileSync(path.join(saida, '_indice.json'), JSON.stringify(res, null, 2));
+    console.log(JSON.stringify({ ok: true, capturas: res.filter((x) => x.png).length, erros: res.filter((x) => x.erro), saida }, null, 2));
   } else throw new Error('comando desconhecido: ' + cmd);
 } catch (e) {
   console.error('Erro: ' + e.message); process.exitCode = 1;

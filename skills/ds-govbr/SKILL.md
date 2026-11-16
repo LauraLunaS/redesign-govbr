@@ -5,7 +5,13 @@ description: Referência do Design System GOV.BR para redesenhar telas — cores
 
 # Design System GOV.BR: referência rápida
 
-Fonte oficial: https://www.gov.br/ds. Na dúvida sobre um componente, consulte a página dele lá. Se a biblioteca oficial DS GOV.BR estiver ligada ao arquivo do Figma e o MCP do Figma estiver disponível, prefira instâncias dela. O kit deste plugin desenha camadas editáveis com as mesmas medidas e cores.
+Esta é só a base mínima. O contexto completo do projeto fica em `.redesign-govbr/contexto/resumo.md`, montado pela skill `coletar-contexto`. Ele reúne quatro fontes:
+1. **Telas já validadas do projeto** no Figma.
+2. **Biblioteca DS GOV.BR** no Figma, usada como instâncias reais via `spec.biblioteca`.
+3. **Site oficial https://www.gov.br/ds:** a página de cada componente, em `/ds/components/<nome>?tab=designer`.
+4. **Sites do domínio gov.br:** composição de páginas reais.
+
+Quando algo aqui divergir do `resumo.md`, vale o `resumo.md`.
 
 ## Fundamentos
 
