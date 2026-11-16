@@ -66,7 +66,18 @@ async function prepararFontes() {
     };
   }
   for (const k of ['r', 'b', 'sb']) await figma.loadFontAsync(F[k]);
+  // ícones: Font Awesome 5 Free (Solid / Regular), a biblioteca de ícones do DS GOV.BR
+  FA = {};
+  for (const st of ['Solid', 'Regular']) {
+    const fn = DISPONIVEIS.find((f) => /^Font Awesome 5 Free$/i.test(f.family) && f.style.toLowerCase() === st.toLowerCase());
+    if (fn) { try { await figma.loadFontAsync(fn); FA[st.toLowerCase()] = fn; } catch (e) {} }
+  }
+  if (!FA.solid) FA = null;
+  if (typeof aplicarFontAwesome === 'function') aplicarFontAwesome();
 }
+// null = Font Awesome 5 Free não instalada (ícones caem para vetores desenhados)
+let FA = null;
+const avisoIcones = () => FA ? ' Ícones: Font Awesome 5 Free.' : ' Atenção: a fonte Font Awesome 5 Free não está instalada; os ícones saíram como vetores. Instale "Font Awesome 5 Free for Desktop" (fontawesome.com, versão 5.x), reinicie o Figma e rode de novo.';
 
 // ---------- utilitários de desenho ----------
 function txt(pai, s, x, y, o) {

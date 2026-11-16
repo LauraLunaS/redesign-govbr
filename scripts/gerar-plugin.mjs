@@ -95,7 +95,7 @@ async function main() {
     if (nova) yNova = sec.y + sec.height + 400;
   }
   figma.viewport.scrollAndZoomIntoView(pagina.children.filter((n) => n.type === 'SECTION' && areas.some((a) => n.name.includes(' · ' + a + ' ('))));
-  return feitas.length + ' telas desenhadas na página "' + pagina.name + '".' + (erros.length ? ' Falharam: ' + erros.join(' | ') : '') + ' Telas antigas com o mesmo nome foram mantidas com o sufixo "· anterior".';
+  return feitas.length + ' telas desenhadas na página "' + pagina.name + '".' + (erros.length ? ' Falharam: ' + erros.join(' | ') : '') + ' Telas antigas com o mesmo nome foram mantidas com o sufixo "· anterior".' + avisoIcones();
 }
 main().then((m) => figma.closePlugin(m)).catch((e) => figma.closePlugin('Erro: ' + (e && e.message ? e.message : e)));
 `;
@@ -204,7 +204,7 @@ async function main() {
     badge.resize(tb.width + 120, tb.height + 60); badge.x = larg - badge.width - 200; badge.y = 120; tb.x = badge.x + 60; tb.y = badge.y + 30;
     resumo.push(area + ': ' + n + ' pranchas + ' + comp.n + ' componentes');
   }
-  return 'Handoff criado — ' + resumo.join(' | ') + '.' + (faltando.length ? ' Telas não encontradas: ' + faltando.join('; ') : '') + ' As telas originais não foram alteradas.';
+  return 'Handoff criado — ' + resumo.join(' | ') + '.' + (faltando.length ? ' Telas não encontradas: ' + faltando.join('; ') : '') + ' As telas originais não foram alteradas.' + avisoIcones();
 }
 let LARGURAS_ATUAL = LARGURAS;
 main().then((m) => figma.closePlugin(m)).catch((e) => figma.closePlugin('Erro: ' + (e && e.message ? e.message : e)));

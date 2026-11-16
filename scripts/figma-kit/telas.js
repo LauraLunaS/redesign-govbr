@@ -19,6 +19,39 @@ ICO.casa = (p, c) => vetor(p, 'M 1 7 L 7 1 L 13 7 M 3 5.5 L 3 13 L 11 13 L 11 5.
 ICO.ok = (p, c) => vetor(p, 'M 0 5 L 4 9 L 12 0', 12, 9, c || G.ok, 'sucesso', 2);
 ICO.upload = (p, c) => vetor(p, 'M 8 12 L 8 1 M 3 6 L 8 1 L 13 6 M 1 15 L 15 15', 16, 16, c || G.azul, 'enviar', 1.6);
 
+// ---------- Font Awesome 5 Free (ícones oficiais do DS GOV.BR) ----------
+// glifo como texto editável, centrado num quadro do tamanho do ícone; nome da camada = "Ícone · fa-<nome>"
+function fa(pai, codigo, nome, tam, cor, estilo) {
+  const q = box(pai, 'HORIZONTAL', { name: 'Ícone · fa-' + nome, w: Math.round(tam * 1.25), h: tam, align: 'CENTER', justify: 'CENTER' });
+  const t = figma.createText();
+  t.fontName = (estilo === 'regular' && FA.regular) || FA.solid;
+  t.fontSize = tam; t.characters = String.fromCodePoint(codigo);
+  t.fills = solid(cor || G.azul); t.lineHeight = { unit: 'PIXELS', value: tam };
+  t.textAlignHorizontal = 'CENTER'; t.name = 'fa-' + nome;
+  q.appendChild(t);
+  return q;
+}
+// ícone do kit → [código, nome FA, tamanho, cor padrão, estilo]
+const FA_ICONES = {
+  chevBaixo: [0xf078, 'chevron-down', 12], chevDir: [0xf054, 'chevron-right', 12], chevEsq: [0xf053, 'chevron-left', 12],
+  lupa: [0xf002, 'search', 16], cal: [0xf073, 'calendar-alt', 16, 'tx2', 'regular'], fechar: [0xf00d, 'times', 14],
+  doc: [0xf15c, 'file-alt', 16, null, 'regular'], recarregar: [0xf2f1, 'sync-alt', 14], menu: [0xf0c9, 'bars', 18],
+  funil: [0xf0b0, 'filter', 14], ordenar: [0xf0dc, 'sort', 14], kebab: [0xf142, 'ellipsis-v', 16], casa: [0xf015, 'home', 14],
+  ok: [0xf00c, 'check', 12, 'ok'], upload: [0xf093, 'upload', 16],
+};
+function aplicarFontAwesome() {
+  if (!FA) return;
+  for (const [k, [cod, nome, tam, corPadrao, estilo]] of Object.entries(FA_ICONES)) {
+    ICO[k] = (p, c) => fa(p, cod, nome, tam, c || (corPadrao ? G[corPadrao] : G.azul), estilo);
+  }
+}
+// ícone de status (mensagens e erros de campo)
+const FA_STATUS = { info: [0xf05a, 'info-circle'], aviso: [0xf071, 'exclamation-triangle'], erro: [0xf057, 'times-circle'], sucesso: [0xf058, 'check-circle'], campoErro: [0xf06a, 'exclamation-circle'] };
+function iconeStatus(pai, tipo, cor, tam, letra, corLetra) {
+  if (FA) { const [cod, nome] = FA_STATUS[tipo] || FA_STATUS.info; return fa(pai, cod, nome, tam, cor); }
+  return selo(pai, letra, cor, corLetra || G.branco, tam);
+}
+
 // ---------- mensagens (info, aviso, erro, sucesso) ----------
 const MSG = {
   info: { bg: hex('#D4E5FF'), ic: hex('#1351B4'), l: 'i' }, aviso: { bg: hex('#FFF5C2'), ic: hex('#FFCD07'), l: '!', tx: true },
@@ -27,7 +60,7 @@ const MSG = {
 function mensagemGov(pai, b) {
   const k = MSG[b.nivel] || MSG.info;
   const m = box(pai, 'HORIZONTAL', { name: 'Mensagem · ' + (b.nivel || 'info'), bg: k.bg, pad: 16, gap: 12, w: 'FILL', align: 'MIN' });
-  selo(m, k.l, k.ic, k.tx ? G.tx : G.branco);
+  iconeStatus(m, MSG[b.nivel] ? b.nivel : 'info', k.ic, 20, k.l, k.tx ? G.tx : G.branco);
   const v = box(m, 'VERTICAL', { name: 'Texto', gap: 4, w: 'FILL' });
   if (b.titulo) T(v, b.titulo, { font: F.b, size: 14, lh: 20, fill: true });
   T(v, b.texto || '', { size: 14, fill: true, lh: 20, bold: b.negrito });
@@ -254,7 +287,7 @@ function campoGov(pai, c) {
   }
   const ph = !c.valor;
   const w = campo(pai, rot, c.valor || c.placeholder || '', { ph, ico: c.tipo === 'select' ? 'select' : c.tipo === 'data' ? 'cal' : c.tipo === 'busca' ? 'lupa' : null, alto: c.tipo === 'textarea' ? 96 : null, ajuda: c.erro ? null : c.ajuda, prefixo: c.prefixo });
-  if (c.erro) { const e = w.findOne((x) => x.name === 'Entrada'); if (e) e.strokes = solid(G.erro); const m = box(w, 'HORIZONTAL', { name: 'Erro', gap: 6, align: 'CENTER' }); selo(m, '!', G.erro, G.branco, 16); T(m, c.erro, { size: 12, cor: G.erro }); }
+  if (c.erro) { const e = w.findOne((x) => x.name === 'Entrada'); if (e) e.strokes = solid(G.erro); const m = box(w, 'HORIZONTAL', { name: 'Erro', gap: 6, align: 'CENTER' }); iconeStatus(m, 'campoErro', G.erro, 14, '!'); T(m, c.erro, { size: 12, cor: G.erro }); }
   if (c.desabilitado) { const e = w.findOne((x) => x.name === 'Entrada'); if (e) { e.fills = solid(G.cab); e.opacity = 0.6; } }
   return w;
 }

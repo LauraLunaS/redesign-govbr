@@ -23,6 +23,7 @@ Fonte oficial: https://www.gov.br/ds. Na dúvida sobre um componente, consulte a
 | Grid | 12 colunas, calha 24 px. Margens: 1280 → 40, 1440 → 120, 1920 → 160 |
 | Espaçamento | múltiplos de 8 (8, 16, 24, 32, 40, 64) |
 | Sombra de cartão | y 1, desfoque 6, preto 16% |
+| Ícones | **Font Awesome 5 Free** (Solid; Regular para calendário e documento), o mesmo conjunto do DS GOV.BR. Tamanhos 12 a 20 px, cor do texto ou azul em ações |
 
 ## Componentes e padrões
 

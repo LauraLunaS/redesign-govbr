@@ -25,6 +25,8 @@ Projeto (VS Code) ──► sobe o site ──► mapeia telas ──► ⏸ voc
 | Claude Code | `npm install -g @anthropic-ai/claude-code`, depois `claude` para entrar |
 | Node 18+ | https://nodejs.org |
 | Figma desktop | https://www.figma.com/downloads (o plugin local roda nele) |
+| Fonte **Font Awesome 5 Free** (ícones do DS GOV.BR) | Baixe "Free for Desktop" da versão **5.x** em https://fontawesome.com/download, instale os arquivos `Font Awesome 5 Free-Solid-900.otf` e `Font Awesome 5 Free-Regular-400.otf` e reinicie o Figma |
+| Fonte Rawline (recomendada) | Fonte do DS GOV.BR; sem ela o plugin usa Inter |
 | Token do Figma (gratuito, só leitura) | Figma → **Settings → Security → Personal access tokens** → criar com escopo de leitura de arquivos |
 | Guardar o token | Windows: `setx FIGMA_TOKEN "seu-token"` e reabrir o terminal · macOS/Linux: `export FIGMA_TOKEN=...` no `~/.zshrc` ou `~/.bashrc` |
 
@@ -130,3 +132,4 @@ Depois importe `/tmp/teste-telas/manifest.json` no Figma desktop e rode.
 - As telas usam camadas desenhadas com as medidas do DS GOV.BR, não instâncias da biblioteca oficial. Se a biblioteca estiver no arquivo e o MCP do Figma tiver cota, o agente pode trocar por instâncias.
 - Projetos que não sobem localmente (dependem de VPN, backend fechado etc.): o agente pede ajuda ou trabalha a partir de prints que você fornecer.
 - Fontes: usa **Rawline** se estiver instalada; senão, Inter.
+- Ícones: **Font Awesome 5 Free** como texto editável (camadas `Ícone · fa-<nome>`). Para trocar um ícone no Figma, edite o caractere ou use o plugin oficial do Font Awesome. Sem a fonte instalada, o plugin desenha vetores simples e avisa na mensagem final.

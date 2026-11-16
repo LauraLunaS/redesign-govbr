@@ -26,7 +26,7 @@ async function montarPrancha(tela, menu, W, ehMenu) {
   // textos visíveis
   const textos = copia.findAll((n) => n.type === 'TEXT' && visivel(n, copia) && n.characters.trim().length > 0)
     .map((n) => ({ n, r: rel(n, copia), s: n.characters.trim(), e: estiloTexto(n) }))
-    .filter((t) => t.e && t.r.w > 0)
+    .filter((t) => t.e && t.r.w > 0 && !/font awesome/i.test(t.e.fam))
     .sort((a, b) => a.r.y - b.r.y || a.r.x - b.r.x);
   // título = maior texto abaixo do cabeçalho do portal
   const abaixo = textos.filter((t) => t.r.y > 150);
@@ -39,7 +39,7 @@ async function montarPrancha(tela, menu, W, ehMenu) {
   txt(prancha, 'HANDOFF · ' + menu.toUpperCase(), sx, 64, { font: F.b, size: 16, cor: C.kicker, name: 'Kicker' });
   txt(prancha, tituloPrancha + ' — ' + W + ' px', sx, 92, { font: F.b, size: 44, cor: C.titulo, name: 'Título' });
   const margem = h1 ? par(h1.r.x) : 0;
-  txt(prancha, 'Medidas lidas da tela no Figma, em px. Conteúdo a partir de ' + margem + ' px da borda; tela com ' + par(H) + ' px de altura. Fonte ' + (h1 ? h1.e.fam : 'Rawline') + '.', sx, 160,
+  txt(prancha, 'Medidas lidas da tela no Figma, em px. Conteúdo a partir de ' + margem + ' px da borda; tela com ' + par(H) + ' px de altura. Fonte ' + (h1 ? h1.e.fam : 'Rawline') + '.' + (copia.findOne((n) => n.type === 'TEXT' && /font awesome/i.test((n.fontName && n.fontName.family) || '')) ? ' Ícones: Font Awesome 5 Free (camadas “Ícone · fa-…”).' : ''), sx, 160,
     { size: 18, cor: C.lead, w: Math.min(W, 1100), lh: 28, name: 'Lead' });
 
   // legenda
